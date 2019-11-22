@@ -9,5 +9,10 @@
 			"name": "valugit",
 			"email": "44845228+valugit@users.noreply.github.com"
 		}
-	]
+	],
+	"autoload": {
+		"psr-0": {
+			"": "src/"
+		}
+	}
 }
