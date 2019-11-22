@@ -1,0 +1,13 @@
+{
+	"name": "gregoiremasse/vaelu-orm",
+	"description": "Un petit ORM sans pretention.",
+	"require": {
+		"composer/composer": "^1.9"
+	},
+	"authors": [
+		{
+			"name": "valugit",
+			"email": "44845228+valugit@users.noreply.github.com"
+		}
+	]
+}
