@@ -2,7 +2,10 @@
 
 class BubbleTea extends BaseEntity
 {
-    public function __construct() {
-        
+    private $table;
+    private $columns;
+
+    public function __construct()
+    {
     }
 }
