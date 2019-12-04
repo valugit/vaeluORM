@@ -11,7 +11,16 @@ echo $teaFlavor;
 
 
 //new
+$tea = new BubbleTea();
 
+$tea->set('tea', 'green');
+$tea->set('flavor', 'lemon');
+$tea->set('poppings', 'green apple');
+$tea->set('size', 700);
+
+$entityManager->persist($tea);
+$entityManager->flush();
+echo "New bubble tea created : " . $tea->getId() . "\n";
 
 //all
 $allTeas = $TeaRepo->getAll();
