@@ -4,7 +4,7 @@ namespace VaeluORM;
 
 class BaseEntity
 {
-    private $conn;
+    private $connection;
 
     public function __construct()
     {
@@ -18,7 +18,15 @@ class BaseEntity
     {
     }
 
-    public function set($col, $value)
+    public function set($column, $value)
+    {
+    }
+
+    public function getOneBy($column, $value)
+    {
+    }
+
+    public function __get($column)
     {
     }
 }
