@@ -4,4 +4,5 @@ namespace VaeluORM;
 
 class Manager
 {
+  
 }
