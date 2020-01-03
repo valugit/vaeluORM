@@ -1,5 +1,9 @@
 <?php
 
+namespace App\Entities;
+
+use VaeluORM\BaseEntity;
+
 class BubbleTea extends BaseEntity
 {
     protected $table;
