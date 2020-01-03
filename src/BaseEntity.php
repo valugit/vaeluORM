@@ -26,6 +26,15 @@ class BaseEntity
     {
     }
 
+    public function getAll($limit = 0)
+    {
+    }
+
+    public function getAllBy($column, $value, $limit = 0)
+    {
+    }
+
+    // get attribute of object
     public function __get($column)
     {
     }
