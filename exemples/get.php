@@ -4,12 +4,6 @@ require_once('init.php');
 
 $TeaRepo = $entities->getEntity('Tea');
 
-//get
-$idTea = $TeaRepo->getOneBy('id', '404');
-$teaFlavor = $idTea->flavor; // ->__get('flavor');
-echo $teaFlavor;
-
-
 //new
 $tea = new BubbleTea();
 
@@ -21,6 +15,11 @@ $tea->set('size', 700);
 $entityManager->persist($tea);
 $entityManager->flush();
 echo "New bubble tea created : " . $tea->getId() . "\n";
+
+//get
+$idTea = $TeaRepo->getOneBy('id', '404');
+$teaFlavor = $idTea->flavor; // ->__get('flavor');
+echo $teaFlavor;
 
 //all
 $allTeas = $TeaRepo->getAll();
