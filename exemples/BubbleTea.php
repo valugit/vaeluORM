@@ -5,14 +5,15 @@ class BubbleTea extends BaseEntity
     protected $table;
     protected $columns;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->table = 'bubble_tea';
         $this->columns = [
-            ['tea'->'str'], 
-            ['flavor'->'str'], 
-            ['poppings'->'str'], 
-            ['size'->'int'], 
-            ['hot'->'bool']
+            ['tea'=>'str'],
+            ['flavor'=>'str'],
+            ['poppings'=>'str'],
+            ['size'=>'int'],
+            ['hot'=>'bool']
         ];
     }
 }
