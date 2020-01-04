@@ -15,4 +15,4 @@ $tea->set('poppings', 'green apple');
 $tea->set('size', 700);
 $tea->set('hot', 0);
 
-$TeaRepo->save($tea, 1);
+$TeaRepo->save($tea, 5);

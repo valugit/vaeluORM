@@ -12,5 +12,4 @@ $user = $config['database']['user'];
 $pwd = $config['database']['password'];
 $conn = new PDO($dsn, $user, $pwd);
 
-$manager = new Manager($conn);
- 
+$manager = new Manager($conn, $config['database']['name']);
