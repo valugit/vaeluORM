@@ -6,6 +6,7 @@ class BaseEntity
 {
     private $connection;
     private $data;
+    private $tempData;
 
     public function __construct($connection)
     {
@@ -55,6 +56,11 @@ class BaseEntity
 
     public function set($column, $value)
     {
+        if (array_key_exists($column, $this->columns)) {
+            $this->tempData[$column] = $value;
+        } else {
+            echo "This column does not exist : ".$column."\n";
+        }
     }
 
     public function getOneBy($column, $value)

@@ -13,11 +13,11 @@ class BubbleTea extends BaseEntity
     {
         $this->table = 'bubble_tea';
         $this->columns = [
-            ['tea'=>'str'],
-            ['flavor'=>'str'],
-            ['poppings'=>'str'],
-            ['size'=>'int'],
-            ['hot'=>'bool']
+            'tea'=>'str',
+            'flavor'=>'str',
+            'poppings'=>'str',
+            'size'=>'int',
+            'hot'=>'bool'
         ];
     }
 }
