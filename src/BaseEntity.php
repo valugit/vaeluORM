@@ -5,7 +5,6 @@ namespace VaeluORM;
 class BaseEntity
 {
     private $connection;
-    private $data;
     private $tempData;
 
     public function __construct($connection)
@@ -29,11 +28,6 @@ class BaseEntity
             $result = $statement->fetchObject();
             return $result;
         }
-    }
-
-    public function fillData($data)
-    {
-        $this->data = $data;
     }
 
     public function getTableName()
@@ -74,12 +68,13 @@ class BaseEntity
     {
         if (is_int($replace)) {
             # update
-            $query = "UPDATE ".$this->getTableName()."SET ";
+            $query = "UPDATE ". $this->getTableName() . " SET ";
             foreach ($row->tempData as $key => $value) {
-                $query .= $key." = ".$value.",";
+                $query .= $key . " = '" . $value . "', ";
             }
             $query = substr($query, 0, -2);
-            $query .= " WHERE `".$this->getTableName()."`.`id` = ".$replace;
+            $query .= " WHERE id = '" . $replace . "'";
+            var_dump($query);
         } else {
             #create
             $query = "INSERT INTO ".$this->getTableName()." (";
