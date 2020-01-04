@@ -16,21 +16,33 @@ class BaseEntity
         if (!is_string($query) || empty($query)) {
             throw new Exception("Query not valid");
         }
-        $stmt = $this->connection->prepare($query);
-        $stmt->execute();
-        
+
+        try {
+            $statement = $this->connection->prepare($query);
+        } catch(PDOException $e) {
+            echo "it doesn't work !";
+            return;
+        }
+
+        $statement->execute();
+
         if ($error[0] != 0) {
             return false;
         } else {
-            $result = $stmt->fetchAll(PDO::FETCH_OBJ);
+            $result = $statement->fetchAll(PDO::FETCH_OBJ);
             return $result;
         }
+    }
+
+    public function getTableName()
+    {
+        return $this->table;
     }
 
     public function createTable($name)
     {
     }
-    
+
     public function createColumn($table, $name)
     {
     }
