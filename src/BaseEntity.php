@@ -82,16 +82,37 @@ class BaseEntity
             $query .= " WHERE `".$this->getTableName()."`.`id` = ".$replace;
         } else {
             #create
-            $query = "INSERT INTO ".$this->getTableName()." ('";
-            $query .= implode("', '", array_keys($row->tempData));
-            $query .= "') VALUES ('";
-            $query .= implode("', '", $row->tempData);
-            $query .= "')";
+            $query = "INSERT INTO ".$this->getTableName()." (`";
+            $query .= implode("`, `", array_keys($row->tempData));
+            $query .= "`) VALUES (";
+
+            $newData = [];
+            foreach ($row->tempData as $key => $value) {
+                switch (gettype($value)) {
+                    case 'boolean':
+                        $newData[$key] = $value ? 1 : 0;
+                        break;
+                    case 'string':
+                        $newData[$key] = "`".$value."`";
+                        break;
+                    case 'array':
+                        throw new Exception("Cannot push array in mysql.", 1);
+                        break;
+                    case 'object':
+                        throw new Exception("Cannot push object in mysql.", 1);
+                        break;
+
+                    default:
+                    $newData[$key] = $value;
+                        break;
+                }
+            }
+
+            $query .= implode(", ", $newData);
+            $query .= ")";
         }
 
         $this->query($query);
-        // $statement = $this->connection->prepare($query);
-        // $statement->execute();
     }
 
     // get attribute of object
