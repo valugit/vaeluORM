@@ -22,7 +22,6 @@ class Manager
         $data = $statement->fetchObject();
 
         $repo->fillData($data); // put everything in $data which should be in baseEntity
-        // $repo->createTable($repo->getTableName());
-        return $repo;
+        return $repo; // $repo->createTable($repo->getTableName());
     }
 }

@@ -6,18 +6,6 @@ use App\BubbleTea;
 
 $TeaRepo = $manager->getEntity('BubbleTea');
 
-//new
-$tea = new BubbleTea();
-
-$tea->set('tea', 'green');
-$tea->set('flavor', 'lemon');
-$tea->set('poppings', 'green apple');
-$tea->set('size', 700);
-$tea->set('hot', false);
-
-$TeaRepo->save($tea);
-// echo "New bubble tea created : " . $tea->getId() . "\n";
-
 //get
 $idTea = $TeaRepo->getOneBy('id', '1');
 $teaFlavor = $idTea->flavor; // ->__get('flavor');
