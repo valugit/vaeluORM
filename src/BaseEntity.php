@@ -35,7 +35,8 @@ class BaseEntity
     //     }
     // }
 
-    public function fillData($data) {
+    public function fillData($data)
+    {
         $this->data = $data;
     }
 
@@ -65,6 +66,10 @@ class BaseEntity
     }
 
     public function getAllBy($column, $value, $limit = 0)
+    {
+    }
+
+    public function save($row)
     {
     }
 
