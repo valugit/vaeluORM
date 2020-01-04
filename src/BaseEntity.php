@@ -35,37 +35,8 @@ class BaseEntity
         return $this->table;
     }
 
-    public function createTable()
+    public function createTable($name)
     {
-        $query = "CREATE TABLE " . $this->table . " (";
-        $query .= "id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,";
-        foreach ($this->columns as $name => $type) {
-            $query .= $name . " ";
-
-            switch ($type) {
-                case 'str':
-                    $query .= "VARCHAR(255)";
-                    break;
-                case 'text':
-                    $query .= "TEXT";
-                    break;
-                case 'int':
-                    $query .= "INT";
-                    break;
-                case 'bool':
-                    $query .= "TINYINT(1)";
-                    break;
-
-                default:
-                    $query .= "VARCHAR(255)";
-                    break;
-            }
-            $query .= " NOT NULL,";
-        }
-        $query = substr($query, 0, -1);
-        $query .= ")";
-
-        $this->query($query);
     }
 
     public function createColumn($table, $name)
@@ -103,7 +74,6 @@ class BaseEntity
             }
             $query = substr($query, 0, -2);
             $query .= " WHERE id = '" . $replace . "'";
-            var_dump($query);
         } else {
             #create
             $query = "INSERT INTO ".$this->getTableName()." (";
