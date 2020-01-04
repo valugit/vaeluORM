@@ -6,8 +6,25 @@ class BaseEntity
 {
     private $connection;
 
-    public function __construct()
+    public function __construct($connection)
     {
+        $this->connection = $connection;
+    }
+
+    public function query($query)
+    {
+        if (!is_string($query) || empty($query)) {
+            throw new Exception("Query not valid");
+        }
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute();
+        
+        if ($error[0] != 0) {
+            return false;
+        } else {
+            $result = $stmt->fetchAll(PDO::FETCH_OBJ);
+            return $result;
+        }
     }
 
     public function createTable($name)
