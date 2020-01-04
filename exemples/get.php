@@ -13,12 +13,12 @@ echo $teaFlavor;
 
 //all
 $allTeas = $TeaRepo->getAll();
-foreach ($allTeas as $tea) {
-    echo $tea->flavor;
-}
+// foreach ($allTeas as $tea) {
+//     echo $tea->flavor;
+// }
 
-//filter
-$greenTeas = $TeaRepo->getAllBy('tea', 'green');
-foreach ($greenTeas as $tea) {
-    echo $tea->flavor;
-}
+// //filter
+// $greenTeas = $TeaRepo->getAllBy('tea', 'green');
+// foreach ($greenTeas as $tea) {
+//     echo $tea->flavor;
+// }

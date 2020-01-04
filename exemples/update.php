@@ -12,7 +12,7 @@ $tea = new BubbleTea();
 $tea->set('tea', 'black');
 $tea->set('flavor', 'lemon');
 $tea->set('poppings', 'green apple');
-$tea->set('size', 700);
-$tea->set('hot', 0);
+$tea->set('size', 900);
+$tea->set('hot', 1);
 
-$TeaRepo->save($tea, 5);
+$TeaRepo->save($tea, 4);
