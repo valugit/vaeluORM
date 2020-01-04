@@ -9,8 +9,9 @@ class BubbleTea extends BaseEntity
     protected $table;
     protected $columns;
 
-    public function __construct()
+    public function __construct($connection="")
     {
+        parent::__construct($connection);
         $this->table = 'bubble_tea';
         $this->columns = [
             'tea'=>'str',

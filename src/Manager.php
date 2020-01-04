@@ -17,9 +17,11 @@ class Manager
         $fullEntity = "App\\".$entity;
         $repo = new $fullEntity($this->connection);
 
-        $statement = $this->connection->prepare("SELECT * FROM ".$repo->getTableName());
-        $statement->execute();
-        $data = $statement->fetchObject();
+        $data = $repo->query("SELECT * FROM ".$repo->getTableName());
+
+        // $statement = $this->connection->prepare("SELECT * FROM ".$repo->getTableName());
+        // $statement->execute();
+        // $data = $statement->fetchObject();
 
         $repo->fillData($data); // put everything in $data which should be in baseEntity
         // $repo->createTable($repo->getTableName());
