@@ -11,7 +11,7 @@ class Manager
         $this->connection = $connection;
     }
 
-    public function getEntity()
+    public function getEntity($table)
     {
         //hard :(
     }

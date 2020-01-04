@@ -2,6 +2,8 @@
 
 require_once('init.php');
 
+use App\BubbleTea;
+
 $TeaRepo = $manager->getEntity('BubbleTea');
 
 //new
