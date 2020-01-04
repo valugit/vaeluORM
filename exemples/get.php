@@ -7,9 +7,9 @@ use App\BubbleTea;
 $TeaRepo = $manager->getEntity('BubbleTea');
 
 //get
-$idTea = $TeaRepo->getOneBy('id', '1');
-$teaFlavor = $idTea->flavor; // ->__get('flavor');
-echo $teaFlavor;
+// $idTea = $TeaRepo->getOneBy('id', '1');
+// $teaFlavor = $idTea->flavor; // ->__get('flavor');
+// echo $teaFlavor;
 
 //all
 $allTeas = $TeaRepo->getAll();
