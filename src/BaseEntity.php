@@ -13,28 +13,23 @@ class BaseEntity
         $this->connection = $connection;
     }
 
-    // public function query($query)
-    // {
-    //     if (!is_string($query) || empty($query)) {
-    //         throw new Exception("Query not valid");
-    //     }
+    public function query($query)
+    {
+        if (!is_string($query) || empty($query)) {
+            throw new \Exception("Query not valid");
+        }
 
-    //     try {
-    //         $statement = $this->connection->prepare($query);
-    //     } catch(PDOException $e) {
-    //         echo "it doesn't work !";
-    //         return;
-    //     }
+        $statement = $this->connection->prepare($query);
+        $statement->execute();
+        $error = $statement->errorInfo();
 
-    //     $statement->execute();
-
-    //     if ($error[0] != 0) {
-    //         return false;
-    //     } else {
-    //         $result = $statement->fetchAll(PDO::FETCH_OBJ);
-    //         return $result;
-    //     }
-    // }
+        if ($error[0] != 0) {
+            throw new \Exception("Something went wrong with the query : " . $error[0], 1);
+        } else {
+            $result = $statement->fetchObject();
+            return $result;
+        }
+    }
 
     public function fillData($data)
     {
@@ -75,8 +70,28 @@ class BaseEntity
     {
     }
 
-    public function save($row)
+    public function save($row, $replace=null)
     {
+        if (is_int($replace)) {
+            # update
+            $query = "UPDATE ".$this->getTableName()."SET ";
+            foreach ($row->tempData as $key => $value) {
+                $query .= $key." = ".$value.",";
+            }
+            $query = substr($query, 0, -2);
+            $query .= " WHERE `".$this->getTableName()."`.`id` = ".$replace;
+        } else {
+            #create
+            $query = "INSERT INTO ".$this->getTableName()." ('";
+            $query .= implode("', '", array_keys($row->tempData));
+            $query .= "') VALUES ('";
+            $query .= implode("', '", $row->tempData);
+            $query .= "')";
+        }
+
+        $this->query($query);
+        // $statement = $this->connection->prepare($query);
+        // $statement->execute();
     }
 
     // get attribute of object
