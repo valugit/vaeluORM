@@ -127,35 +127,40 @@ class BaseEntity
         return $this->query($query);
     }
 
-    public function getAll($limit = 0, $orderby = "", $order = "ASC")
+    public function getAll($params = [])
     {
         $query = "SELECT * FROM " . $this->getTableName();
 
-        if ($limit != 0) {
-            $query .= " LIMIT " . $limit;
+        if (key_exists("orderby", $params)) {
+            $query .= " ORDER BY " . $params["orderby"] . " ";
+            $query .= key_exists("order", $params) ? $params["order"] : "ASC";
         }
-        if ($orderby != "") {
-            $query .= " ORDER BY " . $orderby . " " . $order;
+
+        if (key_exists("limit", $params)) {
+            $query .= " LIMIT " . $params["limit"];
         }
 
         return $this->query($query);
     }
 
-    public function getAllBy($where = [], $limit = 0, $orderby = "", $order = "ASC")
+    public function getAllBy($params = [])
     {
+        // $where = [], $orderby = "", $order = "ASC", $limit = 0
         $query = "SELECT * FROM " . $this->getTableName();
 
-        if ($where != []) {
-            foreach ($where as $column => $value) {
+        if (key_exists("where", $params)) {
+            foreach ($params["where"] as $column => $value) {
                 $query .= " WHERE " . $column . " = '" . $value . "'";
             }
         }
 
-        if ($limit != 0) {
-            $query .= " LIMIT " . $limit;
+        if (key_exists("orderby", $params)) {
+            $query .= " ORDER BY " . $params["orderby"] . " ";
+            $query .= key_exists("order", $params) ? $params["order"] : "ASC";
         }
-        if ($orderby != "") {
-            $query .= " ORDER BY " . $orderby . " " . $order;
+
+        if (key_exists("limit", $params)) {
+            $query .= " LIMIT " . $params["limit"];
         }
 
         return $this->query($query);
