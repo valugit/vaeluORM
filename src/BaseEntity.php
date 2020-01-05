@@ -5,7 +5,7 @@ namespace VaeluORM;
 class BaseEntity
 {
     private $connection;
-    private $tempData;
+    // private $tempData;
     private $id;
 
     public function __construct($connection)
@@ -130,7 +130,7 @@ class BaseEntity
     public function set($column, $value)
     {
         if (array_key_exists($column, $this->columns)) {
-            $this->tempData[$column] = $value;
+            $this->$column = $value;
         } else {
             echo "This column does not exist : ".$column."\n";
         }
@@ -211,25 +211,37 @@ class BaseEntity
         return !empty($this->query($query));
     }
 
-    public function save($row, $replace=null)
+    public function save($entity, $replace=null)
     {
         if (is_int($replace)) {
             # update
             $query = "UPDATE ". $this->getTableName() . " SET ";
-            foreach ($row->tempData as $key => $value) {
-                $query .= $key . " = '" . $value . "', ";
+            foreach ($entity->columns as $key => $value) {
+                $query .= $key . " = '" . $entity->$key . "', ";
             }
             $query = substr($query, 0, -2);
             $query .= " WHERE id = '" . $replace . "'";
+
+            $this->query($query);
+
+            $entity->id = $replace;
+            return $entity;
         } else {
             #create
             $query = "INSERT INTO ".$this->getTableName()." (";
-            $query .= implode(", ", array_keys($row->tempData));
-            $query .= ") VALUES ('";
-            $query .= implode("', '", $row->tempData);
-            $query .= "')";
+            $query .= implode(", ", array_keys($entity->columns));
+            $query .= ") VALUES (";
+            foreach ($entity->columns as $key => $value) {
+                $query .= "'" . $entity->$key . "', ";
+            }
+            $query = substr($query, 0, -2);
+            $query .= ")";
+
+            $this->query($query);
+
+            $entity->id = $this->connection->lastInsertId();
+            return $entity;
         }
-        $this->query($query);
     }
 
     public function delete($id)
