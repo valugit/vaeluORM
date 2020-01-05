@@ -11,6 +11,9 @@ class BaseEntity
     public function __construct($connection)
     {
         $this->connection = $connection;
+        if (!file_exists("log")) {
+            mkdir("log");
+        }
     }
 
     public function tableExists($dbname) {
@@ -26,17 +29,25 @@ class BaseEntity
     public function query($query)
     {
         if (!is_string($query) || empty($query)) {
-            throw new \Exception("Query not valid");
+            $this->errorLog($query, "Query not valid");
+            return;
         }
+
+        $requestStart = microtime(true);
 
         $statement = $this->connection->prepare($query);
         $statement->execute();
         $error = $statement->errorInfo();
 
         if ($error[0] != 0) {
-            throw new \Exception("Something went wrong with the query : " . $error[0], 1);
+            $this->errorLog($query, $error[0] . " : " . $error[2]);
         } else {
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
+
+            $requestEnd = microtime(true);
+            $duration = $requestEnd - $requestStart;
+
+            $this->log($query, $duration);
 
             if (empty($result)) {
                 return;
@@ -192,5 +203,25 @@ class BaseEntity
         $query .= " WHERE id = " . $id;
 
         $this->query($query);
+    }
+
+    private function log($query, $duration) {
+        // (time, query, parmeters, duration)
+        $time = new \Datetime();
+        $logText = "[" . $time->format('Y-m-d H:i:s') . "] : ";
+        $logText .= $query;
+        $logText .= " (in " . $duration . " seconds)";
+
+        file_put_contents("log/log.txt", $logText.PHP_EOL, FILE_APPEND | LOCK_EX);
+    }
+
+    private function errorLog($query, $error) {
+        // (time, query, parameters, error)
+        $time = new \Datetime();
+        $logText = "[" . $time->format('Y-m-d H:i:s') . "] : ";
+        $logText .= $query;
+        $logText .= "\n    ERROR : " . $error;
+
+        file_put_contents("log/error.txt", $logText.PHP_EOL, FILE_APPEND | LOCK_EX);
     }
 }
