@@ -6,14 +6,21 @@ class BaseEntity
 {
     private $connection;
     private $tempData;
+    private $id;
 
-    public function __construct($connection, $columns)
+    public function __construct($connection)
     {
         $this->connection = $connection;
+    }
 
-        foreach ($columns as $name => $type) {
-            $this->$name = "";
-        }
+    public function tableExists($dbname) {
+        $query = "SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = '".$dbname."' AND table_name = '".$this->getTableName()."' LIMIT 1";
+
+        $statement = $this->connection->prepare($query);
+        $statement->execute();
+
+        $result = $statement->fetchObject();
+        return $result;
     }
 
     public function query($query)
@@ -29,19 +36,39 @@ class BaseEntity
         if ($error[0] != 0) {
             throw new \Exception("Something went wrong with the query : " . $error[0], 1);
         } else {
-            $result = $statement->fetchAll(\PDO::FETCH_CLASS);
-            var_dump($result);
-            if (count($result) == 1) {
-                echo "\n THERE IS ONLY ONE ITEM \n";
-            } else {
-                echo "\n THERE MORE THAN ONE ITEM \n";
-                foreach ($result as $key => $value) {
-                    // $this->buildEntity($value);
-                }
+            $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
+
+            if (empty($result)) {
+                return;
             }
 
-            return $result;
+            if (!array_key_exists("TABLE_NAME", $result[0])) {
+
+                if (count($result) == 1) {
+                    return $this->buildEntity($result[0]);
+                } else {
+                    $entities = array();
+
+                    foreach ($result as $key => $value) {
+                        $entities[] = $this->buildEntity($value);
+                        // array_push($entities, $this->buildEntity($value));
+                    }
+                    return $entities;
+                }
+            }
         }
+    }
+
+    public function buildEntity($data)
+    {
+        $fullEntity = "App\\".$this->entityName;
+        $entity = new $fullEntity();
+
+        foreach ($data as $column => $value) {
+            $entity->$column = $value;
+        }
+
+        return $entity;
     }
 
     public function buildEntity($data) {

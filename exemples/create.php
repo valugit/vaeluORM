@@ -10,9 +10,9 @@ $TeaRepo = $manager->getEntity('BubbleTea');
 $tea = new BubbleTea();
 
 $tea->set('tea', 'green');
-$tea->set('flavor', 'lemon');
-$tea->set('poppings', 'green apple');
-$tea->set('size', 700);
+$tea->set('flavor', 'rose');
+$tea->set('poppings', 'lemon');
+$tea->set('size', 500);
 $tea->set('hot', 0);
 
 $TeaRepo->save($tea);
