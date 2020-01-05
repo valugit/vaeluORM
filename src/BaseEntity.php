@@ -11,6 +11,9 @@ class BaseEntity
     public function __construct($connection)
     {
         $this->connection = $connection;
+        if (!file_exists("log")) {
+            mkdir("log");
+        }
     }
 
     public function tableExists($dbname)
@@ -27,17 +30,25 @@ class BaseEntity
     public function query($query)
     {
         if (!is_string($query) || empty($query)) {
-            throw new \Exception("Query not valid");
+            $this->errorLog($query, "Query not valid");
+            return;
         }
+
+        $requestStart = microtime(true);
 
         $statement = $this->connection->prepare($query);
         $statement->execute();
         $error = $statement->errorInfo();
 
         if ($error[0] != 0) {
-            throw new \Exception("Something went wrong with the query : " . $error[0], 1);
+            $this->errorLog($query, $error[0] . " : " . $error[2]);
         } else {
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
+
+            $requestEnd = microtime(true);
+            $duration = $requestEnd - $requestStart;
+
+            $this->log($query, $duration);
 
             if (empty($result)) {
                 return;
@@ -127,35 +138,40 @@ class BaseEntity
         return $this->query($query);
     }
 
-    public function getAll($limit = 0, $orderby = "", $order = "ASC")
+    public function getAll($params = [])
     {
         $query = "SELECT * FROM " . $this->getTableName();
 
-        if ($limit != 0) {
-            $query .= " LIMIT " . $limit;
+        if (key_exists("orderby", $params)) {
+            $query .= " ORDER BY " . $params["orderby"] . " ";
+            $query .= key_exists("order", $params) ? $params["order"] : "ASC";
         }
-        if ($orderby != "") {
-            $query .= " ORDER BY " . $orderby . " " . $order;
+
+        if (key_exists("limit", $params)) {
+            $query .= " LIMIT " . $params["limit"];
         }
 
         return $this->query($query);
     }
 
-    public function getAllBy($where = [], $limit = 0, $orderby = "", $order = "ASC")
+    public function getAllBy($params = [])
     {
+        // $where = [], $orderby = "", $order = "ASC", $limit = 0
         $query = "SELECT * FROM " . $this->getTableName();
 
-        if ($where != []) {
-            foreach ($where as $column => $value) {
+        if (key_exists("where", $params)) {
+            foreach ($params["where"] as $column => $value) {
                 $query .= " WHERE " . $column . " = '" . $value . "'";
             }
         }
 
-        if ($limit != 0) {
-            $query .= " LIMIT " . $limit;
+        if (key_exists("orderby", $params)) {
+            $query .= " ORDER BY " . $params["orderby"] . " ";
+            $query .= key_exists("order", $params) ? $params["order"] : "ASC";
         }
-        if ($orderby != "") {
-            $query .= " ORDER BY " . $orderby . " " . $order;
+
+        if (key_exists("limit", $params)) {
+            $query .= " LIMIT " . $params["limit"];
         }
 
         return $this->query($query);
@@ -187,5 +203,25 @@ class BaseEntity
         $query .= " WHERE id = " . $id;
 
         $this->query($query);
+    }
+
+    private function log($query, $duration) {
+        // (time, query, parmeters, duration)
+        $time = new \Datetime();
+        $logText = "[" . $time->format('Y-m-d H:i:s') . "] : ";
+        $logText .= $query;
+        $logText .= " (in " . $duration . " seconds)";
+
+        file_put_contents("log/log.txt", $logText.PHP_EOL, FILE_APPEND | LOCK_EX);
+    }
+
+    private function errorLog($query, $error) {
+        // (time, query, parameters, error)
+        $time = new \Datetime();
+        $logText = "[" . $time->format('Y-m-d H:i:s') . "] : ";
+        $logText .= $query;
+        $logText .= "\n    ERROR : " . $error;
+
+        file_put_contents("log/error.txt", $logText.PHP_EOL, FILE_APPEND | LOCK_EX);
     }
 }
