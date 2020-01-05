@@ -181,4 +181,11 @@ class BaseEntity
         }
         $this->query($query);
     }
+
+    public function delete($id) {
+        $query = "DELETE FROM " . $this->getTableName();
+        $query .= " WHERE id = " . $id;
+
+        $this->query($query);
+    }
 }
