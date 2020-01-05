@@ -55,7 +55,10 @@ class BaseEntity
             }
 
             if (!array_key_exists("TABLE_NAME", $result[0])) {
-                if (count($result) == 1) {
+
+                if (array_key_exists("COUNT(*)", $result[0])) {
+                    return $result[0]["COUNT(*)"];
+                } else if (count($result) == 1) {
                     return $this->buildEntity($result[0]);
                 } else {
                     $entities = array();
@@ -156,7 +159,6 @@ class BaseEntity
 
     public function getAllBy($params = [])
     {
-        // $where = [], $orderby = "", $order = "ASC", $limit = 0
         $query = "SELECT * FROM " . $this->getTableName();
 
         if (key_exists("where", $params)) {
@@ -175,6 +177,34 @@ class BaseEntity
         }
 
         return $this->query($query);
+    }
+
+    public function count($params = [])
+    {
+        $query = "SELECT COUNT(*) FROM " . $this->getTableName();
+
+        if (key_exists("where", $params)) {
+            foreach ($params["where"] as $column => $value) {
+                $query .= " WHERE " . $column . " = '" . $value . "'";
+            }
+        }
+
+        if (key_exists("limit", $params)) {
+            $query .= " LIMIT " . $params["limit"];
+        }
+
+        return $this->query($query);
+    }
+
+    public function exists($where = [])
+    {
+        $query = "SELECT * FROM " . $this->getTableName();
+
+        foreach ($where as $column => $value) {
+            $query .= " WHERE " . $column . " = '" . $value . "'";
+        }
+
+        return !empty($this->query($query));
     }
 
     public function save($row, $replace=null)
