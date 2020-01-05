@@ -18,7 +18,7 @@ class Manager
         $fullEntity = "App\\".$entity;
         $repo = new $fullEntity($this->connection);
 
-        $tableExists = $repo->query("SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = '".$this->dbname."' AND table_name = '".$repo->getTableName()."' LIMIT 1");
+        $tableExists = $repo->tableExists($this->dbname);
 
         if (!$tableExists) {
             $repo->createTable();

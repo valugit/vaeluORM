@@ -21,6 +21,6 @@ class BubbleTea extends BaseEntity
             'size'=>'int',
             'hot'=>'bool'
         ];
-        parent::__construct($connection, $this->columns);
+        parent::__construct($connection);
     }
 }
