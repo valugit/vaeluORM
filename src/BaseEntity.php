@@ -27,6 +27,11 @@ class BaseEntity
         return $result;
     }
 
+    public function getId()
+    {
+        return $this->id;
+    }
+
     public function query($query)
     {
         if (!is_string($query) || empty($query)) {
@@ -55,10 +60,9 @@ class BaseEntity
             }
 
             if (!array_key_exists("TABLE_NAME", $result[0])) {
-
                 if (array_key_exists("COUNT(*)", $result[0])) {
                     return $result[0]["COUNT(*)"];
-                } else if (count($result) == 1) {
+                } elseif (count($result) == 1) {
                     return $this->buildEntity($result[0]);
                 } else {
                     $entities = array();
@@ -228,14 +232,16 @@ class BaseEntity
         $this->query($query);
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         $query = "DELETE FROM " . $this->getTableName();
         $query .= " WHERE id = " . $id;
 
         $this->query($query);
     }
 
-    private function log($query, $duration) {
+    private function log($query, $duration)
+    {
         // (time, query, parmeters, duration)
         $time = new \Datetime();
         $logText = "[" . $time->format('Y-m-d H:i:s') . "] : ";
@@ -245,7 +251,8 @@ class BaseEntity
         file_put_contents("log/log.txt", $logText.PHP_EOL, FILE_APPEND | LOCK_EX);
     }
 
-    private function errorLog($query, $error) {
+    private function errorLog($query, $error)
+    {
         // (time, query, parameters, error)
         $time = new \Datetime();
         $logText = "[" . $time->format('Y-m-d H:i:s') . "] : ";

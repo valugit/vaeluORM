@@ -10,6 +10,7 @@ $TeaRepo = $manager->getEntity('BubbleTea');
 $idTea = $TeaRepo->getOneBy('id', '1');
 $teaTea = $idTea->tea; // ->__get('tea');
 echo "Tea : " . $teaTea . "\n";
+echo "Tea : " . $idTea->getId() . "\n";
 
 //all
 $allTeas = $TeaRepo->getAll(["limit" => 4, "orderby" => "flavor", "order" => "DESC"]);

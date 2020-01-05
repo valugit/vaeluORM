@@ -16,4 +16,4 @@ $tea->set('size', 500);
 $tea->set('hot', 0);
 
 $TeaRepo->save($tea);
-echo "New bubble tea created : " . $tea->id . "\n";
+echo "New bubble tea created : " . $tea->getId() . "\n";
