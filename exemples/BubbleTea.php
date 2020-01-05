@@ -12,7 +12,6 @@ class BubbleTea extends BaseEntity
 
     public function __construct($connection="")
     {
-        parent::__construct($connection);
         $this->entityName = 'BubbleTea';
         $this->table = 'bubble_tea';
         $this->columns = [
@@ -22,5 +21,6 @@ class BubbleTea extends BaseEntity
             'size'=>'int',
             'hot'=>'bool'
         ];
+        parent::__construct($connection, $this->columns);
     }
 }

@@ -7,9 +7,13 @@ class BaseEntity
     private $connection;
     private $tempData;
 
-    public function __construct($connection)
+    public function __construct($connection, $columns)
     {
         $this->connection = $connection;
+
+        foreach ($columns as $name => $type) {
+            $this->$name = "";
+        }
     }
 
     public function query($query)
@@ -25,7 +29,17 @@ class BaseEntity
         if ($error[0] != 0) {
             throw new \Exception("Something went wrong with the query : " . $error[0], 1);
         } else {
-            $result = $statement->fetchAll();
+            $result = $statement->fetchAll(\PDO::FETCH_CLASS);
+            var_dump($result);
+            if (count($result) == 1) {
+                echo "\n THERE IS ONLY ONE ITEM \n";
+            } else {
+                echo "\n THERE MORE THAN ONE ITEM \n";
+                foreach ($result as $key => $value) {
+                    // $this->buildEntity($value);
+                }
+            }
+
             return $result;
         }
     }
