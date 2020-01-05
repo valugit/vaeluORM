@@ -25,9 +25,13 @@ class BaseEntity
         if ($error[0] != 0) {
             throw new \Exception("Something went wrong with the query : " . $error[0], 1);
         } else {
-            $result = $statement->fetchObject();
+            $result = $statement->fetchAll();
             return $result;
         }
+    }
+
+    public function buildEntity($data) {
+        $newBubbleTea = new $this->entityName();
     }
 
     public function getTableName()
@@ -37,10 +41,35 @@ class BaseEntity
 
     public function createTable($name)
     {
-    }
+        $query = "CREATE TABLE " . $this->table . " (";
+        $query .= "id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,";
+        foreach ($this->columns as $name => $type) {
+            $query .= $name . " ";
 
-    public function createColumn($table, $name)
-    {
+            switch ($type) {
+                case 'str':
+                    $query .= "VARCHAR(255)";
+                    break;
+                case 'text':
+                    $query .= "TEXT";
+                    break;
+                case 'int':
+                    $query .= "INT";
+                    break;
+                case 'bool':
+                    $query .= "TINYINT(1)";
+                    break;
+
+                default:
+                    $query .= "VARCHAR(255)";
+                    break;
+            }
+            $query .= ",";
+        }
+        $query = substr($query, 0, -1);
+        $query .= ")";
+
+        $this->query($query);
     }
 
     public function set($column, $value)
@@ -54,14 +83,45 @@ class BaseEntity
 
     public function getOneBy($column, $value)
     {
+        $query = "SELECT * FROM " . $this->getTableName();
+        $query .= " WHERE " . $column . " = '" . $value . "'";
+        $query .= " LIMIT 1";
+
+        return $this->query($query);
     }
 
-    public function getAll($limit = 0)
+    public function getAll($limit = 0, $orderby = "", $order = "ASC")
     {
+        $query = "SELECT * FROM " . $this->getTableName();
+
+        if ($limit != 0) {
+            $query .= " LIMIT " . $limit;
+        }
+        if ($orderby != "") {
+            $query .= " ORDER BY " . $orderby . " " . $order;
+        }
+
+        return $this->query($query);
     }
 
-    public function getAllBy($column, $value, $limit = 0)
+    public function getAllBy($where = [], $limit = 0, $orderby = "", $order = "ASC")
     {
+        $query = "SELECT * FROM " . $this->getTableName();
+
+        if ($where != []) {
+            foreach ($where as $column => $value) {
+                $query .= " WHERE " . $column . " = '" . $value . "'";
+            }
+        }
+
+        if ($limit != 0) {
+            $query .= " LIMIT " . $limit;
+        }
+        if ($orderby != "") {
+            $query .= " ORDER BY " . $orderby . " " . $order;
+        }
+
+        return $this->query($query);
     }
 
     public function save($row, $replace=null)
@@ -83,10 +143,5 @@ class BaseEntity
             $query .= "')";
         }
         $this->query($query);
-    }
-
-    // get attribute of object
-    public function __get($column)
-    {
     }
 }
