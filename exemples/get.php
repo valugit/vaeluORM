@@ -28,3 +28,10 @@ foreach ($greenTeas as $tea) {
 //count
 $blackTeaQuantitea = $TeaRepo->count(["where" => ["tea" => "black"]]);
 echo "There is currently " . $blackTeaQuantitea . " black tea bubbleteas, in the database\n";
+
+// exists
+$whiteTeas = $TeaRepo->exists(["tea" => "white"]) ? "true" : "false";
+echo "Someone ordered a white bubble tea : " . $whiteTeas . "\n";
+
+$lemonTeas = $TeaRepo->exists(["flavor" => "lemon"]) ? "true" : "false";
+echo "Someone ordered a lemon bubble tea : " . $lemonTeas . "\n";

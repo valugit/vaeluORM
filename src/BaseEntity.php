@@ -195,6 +195,17 @@ class BaseEntity
         return $this->query($query);
     }
 
+    public function exists($where = [])
+    {
+        $query = "SELECT * FROM " . $this->getTableName();
+
+        foreach ($where as $column => $value) {
+            $query .= " WHERE " . $column . " = '" . $value . "'";
+        }
+
+        return !empty($this->query($query));
+    }
+
     public function save($row, $replace=null)
     {
         if (is_int($replace)) {
