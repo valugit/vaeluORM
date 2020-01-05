@@ -13,7 +13,8 @@ class BaseEntity
         $this->connection = $connection;
     }
 
-    public function tableExists($dbname) {
+    public function tableExists($dbname)
+    {
         $query = "SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = '".$dbname."' AND table_name = '".$this->getTableName()."' LIMIT 1";
 
         $statement = $this->connection->prepare($query);
@@ -43,7 +44,6 @@ class BaseEntity
             }
 
             if (!array_key_exists("TABLE_NAME", $result[0])) {
-
                 if (count($result) == 1) {
                     return $this->buildEntity($result[0]);
                 } else {
@@ -69,10 +69,6 @@ class BaseEntity
         }
 
         return $entity;
-    }
-
-    public function buildEntity($data) {
-        $newBubbleTea = new $this->entityName();
     }
 
     public function getTableName()
