@@ -3,7 +3,6 @@
 A little ORM, for MySQL only.
 
 ## Initialization
-------
 
 First, you will have to install all required dependencies :
 
@@ -33,7 +32,6 @@ $manager = new Manager($conn, $config['database']['name']);
 And you are now ready to start using the ORM.
 
 ## Documentation
-------
 
 ### Entities
 
