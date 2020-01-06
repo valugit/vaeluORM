@@ -6,4 +6,4 @@ use App\BubbleTea;
 
 $TeaRepo = $manager->getEntity('BubbleTea');
 
-$TeaRepo->delete(6);
+$TeaRepo->delete(1);

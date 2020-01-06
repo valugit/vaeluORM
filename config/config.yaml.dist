@@ -1,6 +1,6 @@
 database:
-  name: ""
-  user: ""
-  password: ""
+  name: "your_database_name"
+  user: "your_username"
+  password: "your_password"
   host: 127.0.0.1
   port: 3306

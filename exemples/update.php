@@ -6,7 +6,6 @@ use App\BubbleTea;
 
 $TeaRepo = $manager->getEntity('BubbleTea');
 
-//new
 $tea = new BubbleTea();
 
 $tea->set('tea', 'green');
